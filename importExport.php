@@ -29,35 +29,28 @@
  */
 
 require_once('config.php');
+require_once('importExport.lib.php');
 
-if ($DEBUG) {
+if (DEBUG) {
     error_reporting(E_ALL);
     ini_set('display_errors', 1);
 }
 
-$action = isset($_GET['export'])?'export': (isset($_GET['import'])?'import':'');
+$action = isset($_GET['export']) ? 'export' : (isset($_GET['import']) ? 'import' : '');
 
 switch ($action) {
-	case 'export': // Device to serrver
-        if (!isset($_POST['dataString'])) {
-            echo prepareJsonError('001');
-            die;
-        }
+	case 'export': // Device to server
+        if (!isset($_POST['dataString']))
+            dieOnError('001');
 
-        $db = connectDb();
-        if ($db == null) {
-            echo prepareJsonError('002');
-            die;
-        }
+        $db = getDb();
+        if ($db == null)
+            dieOnError('002');
 
         cleanDb($db);
 
         $version = isset($_POST['version'])?intval($_POST['version']):0;
         $dataString = $_POST['dataString'];
-        /*if (!isJsonOk($dataString)) {
-            echo prepareJsonError('004');
-            die;
-        }*/
 
         // Generate random password
         $pswd = rand_password();
@@ -72,39 +65,31 @@ switch ($action) {
             )
         );
 
-        if ($res) {
+        if ($res)
             echo prepareJsonSuccess_export($pswd);
-        } else {
-            echo prepareJsonError('005');
-            die;
-        }
+        else
+            dieOnError('005');
 
 	break;
 	case 'import': // Server to device
-        $db = connectDb();
-        if ($db == null) {
-            echo prepareJsonError('002');
-            die;
-        }
+        $db = getDb();
+        if ($db == null)
+            dieOnError('002');
 
         cleanDb($db);
 
         $pswd = isset($_POST['pswd']) ? $_POST['pswd'] : '';
 
-        if ($pswd == '') {
-            echo prepareJsonError('001');
-            die;
-        }
+        if ($pswd == '')
+            dieOnError('001');
 
         $sql = 'SELECT id, version, exportDate, dataString FROM importexport where password=:pswd';
         $sth = $db->prepare($sql, array(PDO::ATTR_CURSOR => PDO::CURSOR_FWDONLY));
         $sth->execute(array(':pswd' => $pswd));
         $lines = $sth->fetchAll();
 
-        if (count($lines) == 0) {
-            echo prepareJsonError('006');
-            die;
-        }
+        if (count($lines) == 0)
+            dieOnError('006');
 
         $line = $lines[0];
         $jsonString = $line['dataString'];
@@ -116,8 +101,7 @@ switch ($action) {
         clearRow($line['id'], $db);
 	break;
 	default:
-		echo prepareJsonError('003');
-		die;
+		dieOnError('003');
 	break;
 }
 
@@ -131,13 +115,14 @@ function clearRow($id, $db) {
 }
 
 /* FUNCTIONS */
-function prepareJsonError($errorCode) {
-    return json_encode(
+function dieOnError($errorCode) {
+    echo json_encode(
         array(
             'success' => false,
             'error' => $errorCode
         )
     );
+    die();
 }
 
 function prepareJsonSuccess_export($pswd) {
@@ -158,26 +143,4 @@ function prepareJsonSuccess_import($jsonObj) {
             'data' => ($jsonObj)
         )
     );
-}
-
-/**
- * Generates a random hexadecimal password
- */
-function rand_password() {
-    return str_pad(dechex(mt_rand(0, 0xFFFFFF)), 6, '0', STR_PAD_LEFT);
-}
-
-function connectDb() {
-    function getConnection() {
-        try {
-            return new PDO('mysql:host='.MYSQL_HOST.';dbname='.MYSQL_DBNAME, MYSQL_USER, MYSQL_PASSWORD);
-        }
-        catch(Exception $e) {
-            return null;
-        }
-    }
-}
-
-function isJsonOk($jsonString) {
-    return is_string($jsonString) && is_object(json_decode($jsonString)) ? true : false;
 }
