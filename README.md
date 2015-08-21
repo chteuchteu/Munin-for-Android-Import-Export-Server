@@ -11,5 +11,8 @@ If you want to use your own server for the Import/Export feature, please follow 
 * Copy the `config-sample.php` file to `config.php`, and set its values depending on the two previous steps
 * In Munin for Android, set the **Import/Export server** config item according to your server address*
 
+**Important**: if you install this on your server, please "Watch" this repository to be kept in touch when updates are
+made to this script.
+
 
 (*) Munin for Android 3.5 and up supports import/export server address customization
