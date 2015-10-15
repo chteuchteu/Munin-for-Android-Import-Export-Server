@@ -49,19 +49,21 @@ switch ($action) {
 
         cleanDb($db);
 
-        $version = isset($_POST['version'])?intval($_POST['version']):0;
+        $version = isset($_POST['version']) ? intval($_POST['version']) : 0;
         $dataString = $_POST['dataString'];
+        $dataType = isset($_POST['dataType']) ? $_POST['dataType'] : 'servers';
 
         // Generate random password
         $pswd = rand_password();
 
-        $query = $db->prepare('INSERT INTO importexport (version, exportDate, password, dataString)
-                VALUES (:version, NOW(), :password, :dataString)');
+        $query = $db->prepare('INSERT INTO importexport (version, exportDate, password, dataString, dataType)
+                VALUES (:version, NOW(), :password, :dataString, :type)');
         $res = $query->execute(
             array(
                 'version' => $version,
                 'password' => $pswd,
-                'dataString' => $dataString
+                'dataString' => $dataString,
+                'dataType' => $dataType
             )
         );
 
@@ -79,13 +81,17 @@ switch ($action) {
         cleanDb($db);
 
         $pswd = isset($_POST['pswd']) ? $_POST['pswd'] : '';
+        $type = isset($_POST['type']) ? $_POST['type'] : 'servers';
 
         if ($pswd == '')
             dieOnError('001');
 
-        $sql = 'SELECT id, version, exportDate, dataString FROM importexport where password=:pswd';
+        $sql = 'SELECT id, version, exportDate, dataString FROM importexport where password=:pswd AND dataType=:dataType';
         $sth = $db->prepare($sql, array(PDO::ATTR_CURSOR => PDO::CURSOR_FWDONLY));
-        $sth->execute(array(':pswd' => $pswd));
+        $sth->execute([
+            ':pswd' => $pswd,
+            'dataType' => $dataType
+        ]);
         $lines = $sth->fetchAll();
 
         if (count($lines) == 0)
@@ -106,11 +112,11 @@ switch ($action) {
 }
 
 
-function cleanDb($db) {
+function cleanDb(PDO $db) {
     $db->exec('DELETE FROM importexport WHERE `exportDate` < CURDATE( ) - INTERVAL 1 DAY');
 }
 
-function clearRow($id, $db) {
+function clearRow($id, PDO $db) {
     $db->exec('DELETE FROM importexport WHERE id = ' . $id);
 }
 

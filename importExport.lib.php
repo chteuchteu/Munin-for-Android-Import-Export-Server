@@ -1,5 +1,8 @@
 <?php
 
+/**
+ * @return null|PDO
+ */
 function getDb() {
     try {
         return new PDO('mysql:host='.MYSQL_HOST.';dbname='.MYSQL_DBNAME, MYSQL_USER, MYSQL_PASSWORD);
