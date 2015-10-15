@@ -7,7 +7,7 @@ CREATE TABLE IF NOT EXISTS `importexport` (
   `exportDate` datetime NOT NULL,
   `password` varchar(16) NOT NULL,
   `dataString` mediumtext NOT NULL,
-  `dataType` varchar(16) NOT NULL DEFAULT 'servers'
+  `dataType` varchar(16) NOT NULL DEFAULT 'masters'
 ) ENGINE=MyISAM AUTO_INCREMENT=16 DEFAULT CHARSET=latin1;
 
 ALTER TABLE `importexport`

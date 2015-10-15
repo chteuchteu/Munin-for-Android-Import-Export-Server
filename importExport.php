@@ -51,7 +51,7 @@ switch ($action) {
 
         $version = isset($_POST['version']) ? intval($_POST['version']) : 0;
         $dataString = $_POST['dataString'];
-        $dataType = isset($_POST['dataType']) ? $_POST['dataType'] : 'servers';
+        $dataType = isset($_POST['dataType']) ? $_POST['dataType'] : 'masters';
 
         // Generate random password
         $pswd = rand_password();
@@ -81,7 +81,7 @@ switch ($action) {
         cleanDb($db);
 
         $pswd = isset($_POST['pswd']) ? $_POST['pswd'] : '';
-        $type = isset($_POST['type']) ? $_POST['type'] : 'servers';
+        $type = isset($_POST['type']) ? $_POST['type'] : 'masters';
 
         if ($pswd == '')
             dieOnError('001');
