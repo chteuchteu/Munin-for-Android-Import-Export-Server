@@ -57,7 +57,7 @@ switch ($action) {
         $pswd = rand_password();
 
         $query = $db->prepare('INSERT INTO importexport (version, exportDate, password, dataString, dataType)
-                VALUES (:version, NOW(), :password, :dataString, :type)');
+                VALUES (:version, NOW(), :password, :dataString, :dataType)');
         $res = $query->execute(
             array(
                 'version' => $version,
