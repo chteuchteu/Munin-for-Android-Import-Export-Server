@@ -82,6 +82,7 @@ switch ($action) {
 
         $pswd = isset($_POST['pswd']) ? $_POST['pswd'] : '';
         $type = isset($_POST['type']) ? $_POST['type'] : 'masters';
+        $dataType = isset($_POST['dataType']) ? $_POST['dataType'] : 'masters';
 
         if ($pswd == '')
             dieOnError('001');
