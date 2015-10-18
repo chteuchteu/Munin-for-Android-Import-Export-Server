@@ -100,7 +100,7 @@ switch ($action) {
 
         $line = $lines[0];
         $jsonString = $line['dataString'];
-        $jsonObj = json_decode(stripslashes("[$jsonString]"), 1);
+        $jsonObj = json_decode("[$jsonString]", true);
 
         echo prepareJsonSuccess_import($jsonObj);
 
