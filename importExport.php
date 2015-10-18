@@ -91,7 +91,7 @@ switch ($action) {
         $sth = $db->prepare($sql, array(PDO::ATTR_CURSOR => PDO::CURSOR_FWDONLY));
         $sth->execute([
             ':pswd' => $pswd,
-            'dataType' => $dataType
+            ':dataType' => $dataType
         ]);
         $lines = $sth->fetchAll();
 
