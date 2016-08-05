@@ -33,13 +33,18 @@ class ExportBagRepository extends EntityRepository
      */
     public function insertExportBag($version, $dataString, $dataType)
     {
-        // TODO make sure pswd is unique
+        // Generate unique password
+        $pswd = Util::generateRandomPassword();
+
+        while ($this->findOneBy(['password' => $pswd]) != null)
+            $pswd = Util::generateRandomPassword();
+
         $bag = new ExportBag();
         $bag
             ->setVersion($version)
             ->setDataString($dataString)
             ->setDataType($dataType)
-            ->setPassword(Util::generateRandomPassword());
+            ->setPassword($pswd);
 
         $em = $this->getEntityManager();
         $em->persist($bag);
