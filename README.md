@@ -4,15 +4,32 @@ Import/Export script called by [Munin for Android](https://github.com/chteuchteu
 ## Installation
 If you want to use your own server for the Import/Export feature, please follow these instructions:
 
-* Clone this repository on your server: `git clone git@github.com:chteuchteu/Munin-for-Android-Import-Export-Server.git`
-* Create a new Mysql database on your server (name it as your want, `muninForAndroidImportExport` is a great name)
-* *(optionnal)* Create a new Mysql user and give him read/write rights on this database
-* Run the `create-tables.sql` script on this database
-* Copy the `config-sample.php` file to `config.php`, and set its values depending on the two previous steps
-* In Munin for Android, set the **Import/Export server** config item according to your server address*
+- On your web server
+    ```bash
+    # cd to destination
+    cd /var/www/
+    
+    # Clone this project
+    git clone https://github.com/chteuchteu/Munin-for-Android-Import-Export-Server.git && cd Munin-for-Android-Import-Export-Server
+    
+    # Install it
+    composer -n install --optimize-autoloader
+    
+    # Update app/config/parameters.yml (database_name, database_user, database_password)
+    vim app/config.parameters.yml
+    
+    # Create database & its schema
+    php bin/console -v --env=prod doctrine:database:create
+    php bin/console -v --env=prod doctrine:schema:update --force
+    
+    # Clear symfony cache
+    php bin/console -v --env=prod cache:clear
+    
+    # Configure a vhost for this project
+    ```
 
-**Important**: if you install this on your server, please "Watch" this repository to be kept in touch when updates are
+- In Munin for Android:
+    Set the **Import/Export server** config item according to your server address*
+
+**Important**: if you install this on your server, please star + watch this repository to be kept in touch when updates are
 made to this script.
-
-
-(*) Munin for Android 3.5 and up supports import/export server address customization
