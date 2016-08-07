@@ -73,6 +73,6 @@ class ExportBagRepository extends EntityRepository
     {
         $em = $this->getEntityManager();
         $em->remove($dataBag);
-        $em->flush($em);
+        $em->flush();
     }
 }
