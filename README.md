@@ -19,11 +19,11 @@ If you want to use your own server for the Import/Export feature, please follow 
     vim app/config.parameters.yml
     
     # Create database & its schema
-    php bin/console -v --env=prod doctrine:database:create
-    php bin/console -v --env=prod doctrine:schema:update --force
+    php bin/console --env=prod doctrine:database:create
+    php bin/console --env=prod doctrine:schema:update --force
     
     # Clear symfony cache
-    php bin/console -v --env=prod cache:clear
+    php bin/console --env=prod cache:clear
     
     # Configure a vhost for this project
     ```
