@@ -11,6 +11,16 @@ use Symfony\Component\HttpFoundation\Request;
 class DefaultController extends BaseController
 {
     /**
+     * Redirects to www.munin-for-android.com
+     * @Route("/")
+     * @Method({"GET"})
+     */
+    public function indexAction()
+    {
+        return $this->redirect('https://www.munin-for-android.com');
+    }
+
+    /**
      * @Route("/importExport.php")
      */
     public function compatAction(Request $request)
