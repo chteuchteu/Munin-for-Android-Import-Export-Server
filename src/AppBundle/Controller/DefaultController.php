@@ -89,7 +89,7 @@ class DefaultController extends BaseController
         );
 
         if (!$bag)
-            self::dieOnError(Errors::SQL_Select_Fail);
+            return self::dieOnError(Errors::SQL_Select_Fail);
 
         // Delete bag
         $exportBagRepo->destroy($bag);
